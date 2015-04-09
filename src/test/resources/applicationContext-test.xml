@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="systemPrereqs"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" value="#{@systemProperties}"/>
+        <property name="targetMethod" value="putAll"/>
+        <property name="arguments">
+            <!-- The new Properties -->
+            <util:properties>
+                <prop key="webdriver.chrome.driver">src/test/resources/drivers/chromedriver.exe</prop>
+                <prop key="webdriver.ie.driver">src/test/resources/drivers/IEDriverServer-x86.exe</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+    <bean id="homepage" class="java.net.URI">
+        <constructor-arg value="http://localhost:10001/SpringMaven/"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:driver.properties"/>
+    </bean>
+
+    <!-- select browser from ${firefox}, ${chrome} or ${ie} -->
+    <bean id="driver" class="${chrome}" destroy-method="quit"/>
+</beans>
